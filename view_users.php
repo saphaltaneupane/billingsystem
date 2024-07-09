@@ -54,9 +54,7 @@ if (!isset($_SESSION['username'])) {
             flex-grow: 1;
             padding: 20px;
         }
-        /* h1, h2 {
-            color: #daa520;            
-        } */
+       
         .logout {
             position: absolute;
             top: 20px;
@@ -78,7 +76,7 @@ if (!isset($_SESSION['username'])) {
             text-align: left;
         }
         th {
-            background-color: #daa520;
+            background-color: black;
             color: white;
         }
         tr:nth-child(even) {

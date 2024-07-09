@@ -129,7 +129,7 @@ $conn->close();
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #daa520;
+            background-color: black;
             color: white;
         }
         tr:hover {
