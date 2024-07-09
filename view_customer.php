@@ -1,36 +1,69 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>View Customers</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Customers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f8f8f8;
             color: #333;
+            display: flex;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: green;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 40px;
             position: relative;
         }
-
         h2 {
             text-align: center;
             margin-bottom: 40px;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #444;
+            color: white;
         }
-
         table {
             width: 100%;
             border-collapse: separate;
@@ -38,17 +71,14 @@
             background-color: transparent;
             box-shadow: none;
         }
-
-        th,
-        td {
+        th, td {
             padding: 15px 20px;
             text-align: left;
             border: none;
-            background-color: white
+            background-color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s ease;
         }
-
         th {
             background-color: black;
             color: #fff;
@@ -56,38 +86,39 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         tr:hover td {
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
-
-        .back-button {
+        .logout {
             position: absolute;
             top: 20px;
             right: 20px;
-        }
-
-        .back-button a {
-            text-decoration: none;
-            background-color: #3498db;
-            color: #fff;
+            background-color: #e74c3c;
+            color: white;
             padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            border-radius: 5px;
         }
-
-        .back-button a:hover {
-            background-color: #2980b9;
+        h1{
+            color:black;
+            text-align: center;
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="register_account_admin.php">Add User</a></li>
+            <li><a href="view_users.php">View Users</a></li>
+            <li><a href="view_bills.php">View Saved Bills</a></li>
+            <li><a href="view_customer.php" class="active">View Customers</a></li>
+            <li><a href="report.php">View report</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <a href="logout.php" class="logout">Logout</a>
+        <h1>Customer Information</h1>
         <?php
         // Database connection
         include('db.php');
@@ -97,7 +128,6 @@
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            echo "<h2>Customer Information</h2>";
             echo "<table>";
             echo "<tr><th>Customer ID</th><th>Name</th><th>Membership Number</th><th>Phone Number</th><th>Address</th></tr>";
 
@@ -125,10 +155,6 @@
         // Close the connection
         $conn->close();
         ?>
-        <div class="back-button">
-            <a href="admin_home.php">Back</a>
-        </div>
     </div>
 </body>
-
 </html>

@@ -126,7 +126,7 @@ if (empty($selectedProducts)) {
             color: #e74c3c;
             animation: bounce 0.5s ease-in-out;
         }
-
+      
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }

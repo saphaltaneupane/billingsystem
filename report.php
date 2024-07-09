@@ -56,43 +56,67 @@ $conn->close();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Sales Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f0f0f0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: green;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            position: relative;
         }
         h1 {
             color: #333;
+            margin-bottom: 20px;
         }
-        .back-button {
+        .logout {
             position: absolute;
             top: 20px;
             right: 20px;
-        }
-
-        .back-button a {
-            text-decoration: none;
-            background-color: #3498db;
-            color: #fff;
+            background-color: #e74c3c;
+            color: white;
             padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            border-radius: 5px;
         }
-
-        .back-button a:hover {
-            background-color: #2980b9;
-        }
-
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -114,25 +138,33 @@ $conn->close();
     </style>
 </head>
 <body>
-    <h1>Daily Sales Report for <?php echo $date; ?></h1>
-    <div class="back-button">
-            <a href="admin_home.php">Back</a>
-        </div>
-    <table>
-        <tr>
-            <th>Product Name</th>
-            <th>Quantity Sold</th>
-            <th>Total Amount</th>
-        </tr>
-        <?php foreach ($daily_sales as $product_name => $data): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($product_name); ?></td>
-            <td><?php echo $data['quantity']; ?></td>
-            <td>Rs. <?php echo number_format($data['total'], 2); ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-
-    
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="register_account_admin.php">Add User</a></li>
+            <li><a href="view_users.php">View Users</a></li>
+            <li><a href="view_bills.php">View Saved Bills</a></li>
+            <li><a href="view_customer.php">View Customers</a></li>
+            <li><a href="report.php" class="active">View report</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <a href="logout.php" class="logout">Logout</a>
+        <h1>Daily Sales Report for <?php echo $date; ?></h1>
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity Sold</th>
+                <th>Total Amount</th>
+            </tr>
+            <?php foreach ($daily_sales as $product_name => $data): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($product_name); ?></td>
+                <td><?php echo $data['quantity']; ?></td>
+                <td>Rs. <?php echo number_format($data['total'], 2); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
 </body>
 </html>

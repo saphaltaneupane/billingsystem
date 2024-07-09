@@ -24,7 +24,7 @@ if (!isset($_SESSION['username'])) {
         }
         .sidebar {
             width: 250px;
-            background-color: #696969;
+            background-color: #2c3e50;
             color: white;
             padding: 20px;
             height: 100vh;
@@ -67,31 +67,6 @@ if (!isset($_SESSION['username'])) {
             text-decoration: none;
             border-radius: 5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #daa520;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .admin {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        .disabled {
-            color: #bdc3c7;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -99,6 +74,7 @@ if (!isset($_SESSION['username'])) {
         <h2>Admin Dashboard</h2>
         <ul>
             <li><a href="register_account_admin.php">Add User</a></li>
+            <li><a href="view_users.php">View Users</a></li>
             <li><a href="view_bills.php">View Saved Bills</a></li>
             <li><a href="view_customer.php">View Customers</a></li>
             <li><a href="report.php">View report</a></li>
@@ -107,60 +83,7 @@ if (!isset($_SESSION['username'])) {
     <div class="content">
         <a href="logout.php" class="logout">Logout</a>
         <h1>Welcome to the Admin Dashboard</h1>
-        <p>Here's a list of all users:</p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Database connection
-                include('db.php');
-
-                // Fetch users from database
-                $sql = "SELECT id, username, email FROM users";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    // Output data of each row
-                    while ($row = $result->fetch_assoc()) {
-                        $id = $row["id"];
-                        $username = htmlspecialchars($row["username"]);
-                        $email = htmlspecialchars($row["email"]);
-
-                        // Check if the username is 'admin'
-                        $class = ($username == 'admin') ? 'admin' : '';
-
-                        echo "<tr>";
-                        echo "<td>$id</td>";
-                        echo "<td class='$class'>$username</td>";
-                        echo "<td>$email</td>";
-                        echo "<td>";
-                      
-                        if ($username != 'admin') {
-                            echo "<a href='update_user.php?id=$id'>Update</a> | ";
-                            echo "<a href='delete_user.php?id=$id' class='delete-btn'>Delete</a>";
-                        } else {
-                            echo "<span class='disabled'>Update</span> | ";
-                            echo "<span class='disabled'>Delete</span>";
-                        }
-                        echo "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4'>No users found</td></tr>";
-                }
-
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
+        <p>Select an option from the sidebar to manage users, view bills, customers, or reports.</p>
     </div>
 </body>
 </html>
