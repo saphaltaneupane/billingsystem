@@ -5,36 +5,52 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-
 include "db.php";
 
 $error_message = "";
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $membershipno = $_POST["membershipno"];
-    $phoneno = $_POST["phoneno"];
-    $address = $_POST["address"];
+    $name = trim($_POST["name"]);
+    $membershipno = trim($_POST["membershipno"]);
+    $phoneno = trim($_POST["phoneno"]);
+    $address = trim($_POST["address"]);
 
-    
-    $sql = "SELECT membershipno FROM customers WHERE membershipno='$membershipno'";
-    $result = $conn->query($sql);
+    // Validate name
+    if (!preg_match("/^[a-zA-Z]/", $name)) {
+        $error_message = "Name must start with an alphabetic character.";
+    }
+    // Validate phone number
+    elseif (!preg_match("/^[0-9]{10}$/", $phoneno)) {
+        $error_message = "Phone number must be exactly 10 digits.";
+    }
+    // Validate address
+    elseif (!preg_match("/^[a-zA-Z]/", $address)) {
+        $error_message = "Address must start with an alphabetic character.";
+    }
+    else {
+        // Check if membership number already exists
+        $stmt = $conn->prepare("SELECT membershipno FROM customers WHERE membershipno = ?");
+        $stmt->bind_param("s", $membershipno);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $error_message = "Membership number already exists. Please use a different number.";
-    } else {
-     
-        $sql = "INSERT INTO customers (name, membershipno, phoneno, address) VALUES ('$name', '$membershipno', '$phoneno', '$address')";
-        if ($conn->query($sql) === TRUE) {
-            header("Location: success.php");
-            exit(); 
+        if ($result->num_rows > 0) {
+            $error_message = "Membership number already exists. Please use a different number.";
         } else {
-            $error_message = "Error: " . $sql . "<br>" . $conn->error;
+            // Insert new customer
+            $stmt = $conn->prepare("INSERT INTO customers (name, membershipno, phoneno, address) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $name, $membershipno, $phoneno, $address);
+            
+            if ($stmt->execute()) {
+                header("Location: success.php");
+                exit();
+            } else {
+                $error_message = "Error: " . $stmt->error;
+            }
         }
+        $stmt->close();
     }
 }
-
 
 $conn->close();
 ?>
@@ -145,16 +161,16 @@ $conn->close();
         ?>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
 
             <label for="membershipno">Membership No:</label>
-            <input type="text" id="membershipno" name="membershipno" required>
+            <input type="text" id="membershipno" name="membershipno" required value="<?php echo isset($_POST['membershipno']) ? htmlspecialchars($_POST['membershipno']) : ''; ?>">
 
             <label for="phoneno">Phone No:</label>
-            <input type="text" id="phoneno" name="phoneno" required>
+            <input type="text" id="phoneno" name="phoneno" required value="<?php echo isset($_POST['phoneno']) ? htmlspecialchars($_POST['phoneno']) : ''; ?>">
 
             <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
+            <input type="text" id="address" name="address" required value="<?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?>">
 
             <input type="submit" value="Submit">
         </form>
